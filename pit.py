@@ -25,8 +25,8 @@ else:
 rp = RandomPlayer(g).play
 gp = GreedyOthelloPlayer(g).play
 hp = HumanOthelloPlayer(g).play
-
-
+bp_object = BotzonePlaters(g)
+bp = bp_object.play
 
 # nnet players
 n1 = NNet(g)
@@ -39,7 +39,8 @@ mcts1 = MCTS(g, n1, args1)
 n1p = lambda x: np.argmax(mcts1.getActionProb(x, temp=0))
 
 if human_vs_cpu:
-    player2 = hp
+    player2 = bp
+    bp(None)
 else:
     n2 = NNet(g)
     n2.load_checkpoint('./pretrained_models/othello/pytorch/', '8x8_100checkpoints_best.pth.tar')
@@ -49,6 +50,6 @@ else:
 
     player2 = n2p  # Player 2 is neural network if it's cpu vs cpu.
 
-arena = Arena.Arena(n1p, player2, g, display=OthelloGame.display)
+arena = Arena.Arena(n1p, player2, g, display=OthelloGame.display, player1_object=None, player2_object=bp_object)
 
 print(arena.playGames(2, verbose=True))

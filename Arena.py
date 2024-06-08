@@ -10,7 +10,7 @@ class Arena():
     An Arena class where any 2 agents can be pit against each other.
     """
 
-    def __init__(self, player1, player2, game, display=None):
+    def __init__(self, player1, player2, game, display=None, player1_object = None,  player2_object = None):
         """
         Input:
             player 1,2: two functions that takes board as input, return action
@@ -26,6 +26,8 @@ class Arena():
         self.player2 = player2
         self.game = game
         self.display = display
+        self.player1_object = player1_object
+        self.player2_object = player2_object
 
     def playGame(self, verbose=False):
         """
@@ -38,13 +40,14 @@ class Arena():
                 draw result returned from the game that is neither 1, -1, nor 0.
         """
         players = [self.player2, None, self.player1]
+        players_object = [self.player2_object, None, self.player1_object]
         curPlayer = 1
         board = self.game.getInitBoard()
         it = 0
 
-        for player in players[0], players[2]:
-            if hasattr(player, "startGame"):
-                player.startGame()
+        for player_object in players_object[0], players_object[2]:
+            if player_object != None and hasattr(player_object, "startGame"):
+                player_object.startGame()
 
         while self.game.getGameEnded(board, curPlayer) == 0:
             it += 1
@@ -62,15 +65,15 @@ class Arena():
                 assert valids[action] > 0
 
             # Notifying the opponent for the move
-            opponent = players[-curPlayer + 1]
-            if hasattr(opponent, "notify"):
+            opponent = players_object[-curPlayer + 1]
+            if opponent != None and hasattr(opponent, "notify"):
                 opponent.notify(board, action)
 
             board, curPlayer = self.game.getNextState(board, curPlayer, action)
 
-        for player in players[0], players[2]:
-            if hasattr(player, "endGame"):
-                player.endGame()
+        for player_object in players_object[0], players_object[2]:
+            if player_object != None and hasattr(player_object, "endGame"):
+                player_object.endGame()
 
         if verbose:
             assert self.display
