@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+# 代码参考：https://github.com/suragnair/alpha-zero-general 基于 MIT license
+# 模型参数：https://github.com/suragnair/alpha-zero-general/blob/master/pretrained_models/othello/pytorch/8x8_100checkpoints_best.pth.tar
+
 import json
 import math
 import time
