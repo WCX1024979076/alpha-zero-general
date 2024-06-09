@@ -41,14 +41,28 @@ class MCTS():
         counts = [self.Nsa[(s, a)] if (s, a) in self.Nsa else 0 for a in range(self.game.getActionSize())]
 
         if temp == 0:
+            if np.max(counts) == 0 :
+                print(len(counts))
+                print(counts)
+                print(self.game.stringRepresentationReadable(canonicalBoard))
+                for i in range(self.args.numMCTSSims):
+                    self.search(canonicalBoard)
             bestAs = np.array(np.argwhere(counts == np.max(counts))).flatten()
             bestA = np.random.choice(bestAs)
             probs = [0] * len(counts)
             probs[bestA] = 1
             return probs
-
+        cout_last = counts
         counts = [x ** (1. / temp) for x in counts]
         counts_sum = float(sum(counts))
+        if counts_sum == 0 :
+            print(len(counts))
+            print(counts)
+            print(cout_last)
+            print(self.game.stringRepresentationReadable(canonicalBoard))
+            for i in range(self.args.numMCTSSims):
+                self.search(canonicalBoard)
+
         probs = [x / counts_sum for x in counts]
         return probs
 
